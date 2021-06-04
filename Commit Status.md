@@ -1,5 +1,5 @@
 # Commit Purpose
-Opening an existing roulette. The route `RouletteOpening` expects a `POST request` that gaves a valid `Roulette Id` to change the state of the respective roulette from *closed* to *open*
+This commits saves the valid bets on a database. If the `IdRoulette` exists and this roulette is open, the beth would be consider as a valid bet. So far, the code allows to create a bet if the request send a header and a structure with the valid keys. The validation of the data received is missing.
 
 # Operation
 
@@ -50,7 +50,7 @@ A succesful roulette opening should look like this:
     }
 
 
-**Use the */AddBet* endpoint to create a new roulette**
+**Use the */AddBet* so far the validation is limited just to verify the keys on the data received, if this results the data added to the database will be exactly the same received**
 
 **Use the */RouletteClosing* unused endpoint so far**
 
@@ -65,9 +65,10 @@ A succesful roulette opening should look like this:
 ## Modified files and folders
 
 ### - routes.py
-- the method `Get`  and `POST` have been defined in the route `"/RouletteOpening"`
-- the code verifies the request made if is not POST, the endpoint will responses a messages like the one shown on the section *Operation* in this file. 
-- key verification it must be `RouletteId` otherwise the endpoint will responses a messages like the one shown on the section *Operation* in this file. 
-- Id verification it must be an Id of an existing roulette otherwise the endpoint will responses a messages like the one shown on the section *Operation* in this file. 
-- If the verification process is succesfull, the state of the selected roulette changes to open, so bets can be done on it.
+- the method `Get` is deleted in `"/RouletteOpening"`, is not need it.
+- the method `POST` have been defined in the route `"/AddBet"`.
+- the following changes were made on the  `"/AddBet"` route.
+  - the code verifies the request made, if is not POST the endpoint will responses a messages like the one shown on the section *Operation* in this file. 
+  - key verification, it should exists `RouletteId` `Bet` and `IdUsuario` otherwise the endpoint will responses a message of invalid keyvalue.
+  
 
