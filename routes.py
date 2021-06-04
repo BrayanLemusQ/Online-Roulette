@@ -14,6 +14,12 @@ def FindRoulette(id):
     if roulette_id_found != None: return True
     else: return False
 
+def VerifyBetAmount(bet_amount):
+    valid_bet_amount=False
+    if type(bet_amount) == int or type(bet_amount) == float:
+        if bet_amount in range(0,10000):
+            valid_bet_amount=True
+    return valid_bet_amount
 
 @app.route("/")
 def index():
@@ -56,12 +62,14 @@ def AddBet():
         request_json_data = request.json
         request_headers=request.headers
         
-        if 'RouletteId' in request_json_data and 'Bet' in request_json_data and 'IdUsuario' in request_headers:
+        if 'RouletteId' in request_json_data and 'BetSelection' in request_json_data and 'IdUsuario' in request_headers and 'BetAmount' in request_json_data:
             roulette_id_received = request_json_data['RouletteId']
-            bet = request_json_data['Bet']
+            roulette_found=FindRoulette(roulette_id_received)
+            bet_selection = request_json_data['BetSelection']
+            bet_amount = request_json_data['BetAmount']
             id_usuario = request_headers['IdUsuario']
-            query = "INSERT INTO open_bets (IdUsuario, IdRoulette, Bet, Datetime) VALUES (%s,%s,%s,%s)"
-            bet_values = [id_usuario,roulette_id_received,bet,"1997-07-16T19:20:30.45+01:00"]
+            query = "INSERT INTO open_bets (IdUsuario, IdRoulette, BetSelection, BetAmount, Datetime) VALUES (%s,%s,%s,%s,%s)"
+            bet_values = [id_usuario, roulette_id_received, bet_selection, bet_amount, "1997-07-16T19:20:30.45+01:00"]
             cursor.execute(query, bet_values)
             connection.commit()
             return "Bet Added - Correct Data"

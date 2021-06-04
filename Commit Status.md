@@ -1,5 +1,11 @@
 # Commit Purpose
-This commits creates a function to search for an existing roulette, this changes allows to optimize the code used on `/RouletteOpening` and reuse it on `/AddBet`
+This commits changes the open_bets table as the bet amount was missing. The new table columns are:
+- Id 
+- IdUsuario
+- IdRoulette
+- BetSelection
+- BetAmount
+- Datetime 
 
 # Operation
 
@@ -63,10 +69,11 @@ A succesful roulette opening should look like this:
 
 # Files and Folders
 ## Modified files and folders
+### - config_database.py
+- The open_bets table creation was changed due to a missing date. The bet amount was not specified. This changed was received succesfully on the database.
 
 ### - routes.py
-- `FindRoulette` function created to optimize code, this function receive as parameter only the id of the Roulette searched and return True or false depending on the roulette existence on the database. 
-- `"/RouletteOpening"`route was changed to use the new function to verify the existence of the roulette.
-- `"/AddBet"`route the variable name for id received was change to `roulette_id_received`
+- `VerifyBetAmount` function was created to evaluate the data from the requests. A valid value is considered between *0 - 10000* and it's only accepted integer values.
+- the missing data was added to the insert on the `/AddBet` route 
   
 
