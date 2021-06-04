@@ -1,5 +1,5 @@
 # Commit Purpose
-Using a route to add a new roulette
+Using a route to add a new bet
 
 # Operation
 
@@ -9,17 +9,22 @@ Using a route to add a new roulette
 
     flask run
 
+**Use the */AddRoulette* endpoint to create a new roulette**
+
+**Use the */AddBet* endpoint to create a new Bet**
 
 # Changes made compared to the previous one
-- Addition of a new element to the database
+- Addition of a new table `roulettes` to the database
+- Addition of a new table `open_bets` to the database
+- Addition of a new bet in the `open_bets` table using a route
+
 
 # Files and Folders
 ## Modified files and folders
 ### - app.py
--A new *"/AddRoulette* route was created
-- INSERT query was used to insert a new roulette with the state as closed by default. 
+-A new *"/AddBet* route was created
+- INSERT query was used to insert a new Bet with random information to the  `open_bets` table
 - 
-### - confid_database.py
-- The *id* of the table roulettes was changed to auto-increment and it was set as a *PRIMARY KEY*
-- The existence table verification code was deleted
+### - config_database.py
+- The `open_bets` table was created.
 
