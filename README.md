@@ -15,3 +15,7 @@ If the virtual environment is not running type the following line on the termina
 ***Run the flask app by typing the following line:***
 
     flask run
+
+**Use the */AddRoulette* endpoint to create a new roulette**
+
+**Use the */AddBet* endpoint to create a new Bet**

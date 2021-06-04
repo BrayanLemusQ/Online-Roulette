@@ -1,5 +1,5 @@
 # Commit Purpose
-Using a route to add a new bet
+Definition of all endpoints. There is no code in every endpoint they should be completed.  
 
 # Operation
 
@@ -14,17 +14,13 @@ Using a route to add a new bet
 **Use the */AddBet* endpoint to create a new Bet**
 
 # Changes made compared to the previous one
-- Addition of a new table `roulettes` to the database
-- Addition of a new table `open_bets` to the database
-- Addition of a new bet in the `open_bets` table using a route
+- Just the definition of `/RouletteOpening`, `/RoletteClosing` and `/RouletteList`, no code.
+
 
 
 # Files and Folders
 ## Modified files and folders
-### - app.py
--A new *"/AddBet* route was created
-- INSERT query was used to insert a new Bet with random information to the  `open_bets` table
-- 
-### - config_database.py
-- The `open_bets` table was created.
+
+### - routes.py
+- Definition of `/RouletteOpening`, `/RoletteClosing` and `/RouletteList`, no code.
 
