@@ -6,6 +6,15 @@ from flask import request, jsonify
 
 connection = mysql.connector.connect(host="localhost", user="roulettesadmin", password="admin", database="roulette_database")
 
+def FindRoulette(id):
+    cursor = connection.cursor()
+    query = "SELECT Id FROM roulettes WHERE Id = %s"
+    cursor.execute(query,[id]) 
+    roulette_id_found = cursor.fetchone()
+    if roulette_id_found != None: return True
+    else: return False
+
+
 @app.route("/")
 def index():
     return "Check the terminal"
@@ -26,12 +35,11 @@ def RouletteOpening():
     if request.method == "POST":
         request_json_data = request.json
         if 'RouletteId' in request_json_data:
-            query = "SELECT Id FROM roulettes WHERE Id = %s"
-            cursor.execute(query,[request_json_data['RouletteId']]) 
-            roulette_id_found = cursor.fetchone()
-            if roulette_id_found != None:
+            roulette_id_received = request_json_data['RouletteId']
+            roulette_found=FindRoulette(roulette_id_received)
+            if roulette_found:
                 query = "UPDATE roulettes SET State = 'open' WHERE Id = %s"
-                cursor.execute(query,[request_json_data['RouletteId']])
+                cursor.execute(query,[roulette_id_received])
                 connection.commit()  
                 return jsonify({'response':200,'Update':"Succesful",'RouletteState':'open'})
             else:
@@ -47,12 +55,13 @@ def AddBet():
     if request.method == "POST":
         request_json_data = request.json
         request_headers=request.headers
+        
         if 'RouletteId' in request_json_data and 'Bet' in request_json_data and 'IdUsuario' in request_headers:
-            roulette_id = request_json_data['RouletteId']
+            roulette_id_received = request_json_data['RouletteId']
             bet = request_json_data['Bet']
             id_usuario = request_headers['IdUsuario']
             query = "INSERT INTO open_bets (IdUsuario, IdRoulette, Bet, Datetime) VALUES (%s,%s,%s,%s)"
-            bet_values = [id_usuario,roulette_id,bet,"1997-07-16T19:20:30.45+01:00"]
+            bet_values = [id_usuario,roulette_id_received,bet,"1997-07-16T19:20:30.45+01:00"]
             cursor.execute(query, bet_values)
             connection.commit()
             return "Bet Added - Correct Data"

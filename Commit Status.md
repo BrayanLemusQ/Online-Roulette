@@ -1,5 +1,5 @@
 # Commit Purpose
-This commits saves the valid bets on a database. If the `IdRoulette` exists and this roulette is open, the beth would be consider as a valid bet. So far, the code allows to create a bet if the request send a header and a structure with the valid keys. The validation of the data received is missing.
+This commits creates a function to search for an existing roulette, this changes allows to optimize the code used on `/RouletteOpening` and reuse it on `/AddBet`
 
 # Operation
 
@@ -57,7 +57,7 @@ A succesful roulette opening should look like this:
 **Use the */RouletteList* unused endpoint so far**
 
 # Changes made compared to the previous one
-- Just the definition of `/RouletteOpening`, `/RoletteClosing` and `/RouletteList`, no code.
+- Definition of a new function in *routes.py* to optimize code
 
 
 
@@ -65,10 +65,8 @@ A succesful roulette opening should look like this:
 ## Modified files and folders
 
 ### - routes.py
-- the method `Get` is deleted in `"/RouletteOpening"`, is not need it.
-- the method `POST` have been defined in the route `"/AddBet"`.
-- the following changes were made on the  `"/AddBet"` route.
-  - the code verifies the request made, if is not POST the endpoint will responses a messages like the one shown on the section *Operation* in this file. 
-  - key verification, it should exists `RouletteId` `Bet` and `IdUsuario` otherwise the endpoint will responses a message of invalid keyvalue.
+- `FindRoulette` function created to optimize code, this function receive as parameter only the id of the Roulette searched and return True or false depending on the roulette existence on the database. 
+- `"/RouletteOpening"`route was changed to use the new function to verify the existence of the roulette.
+- `"/AddBet"`route the variable name for id received was change to `roulette_id_received`
   
 
