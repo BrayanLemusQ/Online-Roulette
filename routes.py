@@ -1,21 +1,23 @@
 from app import app
 from mysql.connector import connection
 import mysql.connector
+from flask import request, jsonify
 
 @app.route("/")
 def index():
     return "Check the terminal"
 
-@app.route("/AddRoulette")
+@app.route("/AddRoulette", methods=["GET"])
 def AddRoulette():
     connection = mysql.connector.connect(host="localhost", user="roulettesadmin", password="admin", database="roulette_database")
     cursor = connection.cursor()
     query = "INSERT INTO roulettes (state) VALUES (%s)"
     cursor.execute(query, ["closed"])
     connection.commit()
+    created_roulette_id = cursor.lastrowid 
     cursor.close()
-    return "Roulette Created "
-
+    return jsonify({'response':200,'created_roulette_id':created_roulette_id})
+    
 @app.route("/RouletteOpening")
 def RouletteOpening():
     return "Roulette Opened"

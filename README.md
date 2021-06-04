@@ -3,7 +3,7 @@ This repository implements an API that represents an online betting roulette. In
 By using two specific endpoint you can add a new Roulette and a new Bet.
 
 ## Operation
-Make sure the virtual environment is running. The word `(env)` should be at the beginning of the command line on the terminal. 
+Make sure the virtual environment is running. The word `(env)` should be at the beginning of the command line on the terminal as it shows the following line: 
 
     (env) PS C:\Desktop\Online-Roulette> 
 
