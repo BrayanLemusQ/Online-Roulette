@@ -1,45 +1,37 @@
 # Commit Purpose
- Table Creation and existence verification
+ Optimization code. A new configuration database file was added to the project thanks to the MySQL Connector/Python version, so there is no more need to verify the existence of a database since the code can do it by itself with this new file.
 
 # Operation
 
-#### **Verify the existence of a database named *roulette_database* by typing the following lines on the virtual environment terminal, before running `flask run`:**
-
-    mysql -u roulettesadmin -p
-
-After that the terminal should show the following message
-
-    Enter password: 
-
-Insert the password: "**admin**"
-
-You should be now on the mysql terminal, write the next code line
-
-    SHOW DATABASES;
-
-If the database *roulette_database* exists you can run flask as is mentioned below. If the database does not exist, type the following code line:
-
-    CREATE DATABASE IF NOT EXISTS roulette_database
-
+#### **No database existence verification need**
 
 ***Run the flask app by typing the following line:***
 
     flask run
 
-Call the route *"/"* and verify that the table ***roulettes*** exists 
 
 # Changes made compared to the previous one
-- Table Creation 
-- Additon of a random value to the table
-- This version needs the creation of a database named *roulette_database*
-- The operation process has changed
+- New configuration file created that is responsible for verification an creation of the database. It also allows to create tables and the basic database structure, this reduces *app.py* code and separate functionalities.
+- Table Creation in case it did not exist
+- Database Creation in case it did not exist
+- The operation process has been optimized
 
 # Files and Folders
 ## Modified files and folders
 ### - app.py
-- Table Creation 
-- Addition of a random value syntax test
-- Existence verification of a table
+- Import the configuration from the *config_database.py* file
+- Code reduced. 
+- 
 ### - readme.md
--The operation process has changed, you should verify the existence of a database named *roulette_database* and if it does not exist you should create it (follow the steps in Operation)
+-The operation process has changed, you should not verify the existence of a database named *roulette_database*
 
+## Created files and folders
+### - confid_database.py
+- This file is created to centralize the entire database configuration .
+- It creates a database *roulette_database* in case it did not exists
+- It creates a table *roulettes* in case it did not exists
+
+### - flask-MySqldb 
+- removed extension
+### - mysql.connector
+- installed extension
