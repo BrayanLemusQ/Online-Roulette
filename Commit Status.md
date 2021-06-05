@@ -1,9 +1,6 @@
 # Commit Purpose
-This commits adds the `AdquireDateNowISOFormat` function which returns the current date in the ISO8601 Format. 
+This commits defines the `RoulettesList` route to list the existing roulettes in the table `roulettes`. If the table `roulettes`is empty the route will respond with a empty data, otherwise the route will list all the created roulettes.
 
-*Example: 2020-04-21T13:09:24-05:00*
-
-this function is called by the time a bet is succesfully added, the result is stored in `open_bets` table
 
 # Operation
 
@@ -103,11 +100,31 @@ The response to a bet successfully added should look like this:
 
 ### **¬ Use the */RouletteClosing* to** unused endpoint so far
 
-### **¬ Use the */RouletteList* to** unused endpoint so far
+### **¬ Use the */RoulettesList* to** list all the created roulettes with theyre corresponding status. 
+
+The route will send a respond with a Json data using the following structure as a result for the request. You must use a `GET request` to acquire the data.
+
+    {
+        "roulette_id_1": current_roulette_status,
+        "roulette_id_2": current_roulette_status,
+        "roulette_id_3": current_roulette_status,
+
+        .
+        .
+        .
+
+        "roulette_id_n": current_roulette_status,
+    }
+
+If the table `roulettes`is empty you will receive a empty data:
+
+    {}
+
+
 
 # Changes made compared to the previous one
-- Creation of a new `AdquireDateNowISOFormat` function in `routes.py`
-
+- A `RoulettesList` route was created
+- The route in charge of listing the created roulettes has changed its name from `RouletteList` to `RoulettesList`
 
 
 # Files and Folders

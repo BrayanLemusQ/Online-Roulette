@@ -124,9 +124,14 @@ def AddBet():
 def RouletteClosing():
     return "Roulette Closed"
 
-@app.route("/RouletteList")
-def RouletteList():
-    return "Roulette list displayed"
-
-
-
+@app.route("/RoulettesList", methods = ["GET"])
+def RoulettesList():
+    cursor = connection.cursor()
+    query = "SELECT * FROM roulettes"
+    cursor.execute(query)
+    roulettes_created = cursor.fetchall()
+    dictionary_roulette ={} 
+    if cursor.rowcount != 0:
+        for row_id_roulettes in roulettes_created:
+            dictionary_roulette[row_id_roulettes[0]]= row_id_roulettes[1]
+    return jsonify(dictionary_roulette)
