@@ -20,4 +20,5 @@ else:
 
 cursor.execute("CREATE TABLE IF NOT EXISTS roulettes (Id int NOT NULL AUTO_INCREMENT, State varchar(6) DEFAULT NULL, PRIMARY KEY(Id))")
 cursor.execute("CREATE TABLE IF NOT EXISTS open_bets (Id int NOT NULL AUTO_INCREMENT, IdUsuario varchar(255) NOT NULL, IdRoulette int NOT NULL, BetSelection varchar(6) NOT NULL, BetAmount smallint NOT NULL, Datetime varchar(30) NOT NULL, PRIMARY KEY(Id))")
+cursor.execute("CREATE TABLE IF NOT EXISTS closed_bets (Id int NOT NULL AUTO_INCREMENT, IdUsuario varchar(255) NOT NULL, IdRoulette int NOT NULL, BetSelection varchar(6) NOT NULL, BetAmount smallint NOT NULL, Datetime varchar(30) NOT NULL, BetResult varchar(5) NOT NULL, AmountWon INT NOT NULL, PRIMARY KEY(Id))")
 cursor.close()

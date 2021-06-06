@@ -104,7 +104,6 @@ The response to a bet successfully added should look like this:
         "response": 200
     }
 
-### **¬ Use the */RouletteClosing* to** unused endpoint so far
 
 ### **¬ Use the */RoulettesList* to** list all the created roulettes with theyre corresponding status. 
 

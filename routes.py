@@ -3,6 +3,7 @@ from mysql.connector import connection
 import mysql.connector
 from flask import request, jsonify
 import datetime
+import random
 
 connection = mysql.connector.connect(host="localhost", user="roulettesadmin", password="admin", database="roulette_database")
 
@@ -14,6 +15,7 @@ def FindRoulette(id):
     roulette_id_found = cursor.fetchone()
     if roulette_id_found != None: valid_roulette = True
     else: valid_roulette = False
+    
     return valid_roulette
 
 def VerifyBetAmount(bet_amount):
@@ -21,6 +23,7 @@ def VerifyBetAmount(bet_amount):
     if type(bet_amount) == int:
         if bet_amount in range(0,10000): 
             valid_bet_amount=True
+    
     return valid_bet_amount
 
 def VerifyBetSelection(bet_selection):
@@ -35,6 +38,7 @@ def VerifyBetSelection(bet_selection):
         times_selection_appears__in_valid_selection=valid_bet_selection.count(bet_selection)
         if times_selection_appears__in_valid_selection == 1:
             valid_bet_amount=True
+    
     return valid_bet_amount
 
 def VerifyRouletteStatus(id):
@@ -59,6 +63,80 @@ def AdquireDateNowISOFormat():
     datetime_iso8601_format= datetime.datetime(year, month, day, hour, minute, second).astimezone().isoformat()
     return datetime_iso8601_format
 
+def TableColumnNames(table_name):
+    if table_name == "roulettes": query = "SHOW COLUMNS FROM roulettes"
+    if table_name == "open_bets": query = "SHOW COLUMNS FROM open_bets"
+    if table_name == "closed_bets": query = "SHOW COLUMNS FROM closed_bets"
+    cursor = connection.cursor()    
+    cursor.execute(query)
+    table_column_names=cursor.fetchall()
+
+    return table_column_names
+
+def ListTableRecords(table_name):
+    column_names = TableColumnNames(table_name)
+    existing_table_records = TableRecords(table_name)
+    noumber_of_records = len(existing_table_records) 
+    records_list = [None]*noumber_of_records
+    record_from_the_table={}  
+    record_number=0
+    for row_elements in existing_table_records:
+        column_number=0
+        for column_name in column_names:
+            record_from_the_table[column_name[0]]= row_elements[column_number]
+            column_number+=1
+        records_list[record_number] = record_from_the_table
+        record_from_the_table={}
+        record_number+=1
+        
+    return records_list
+
+def TableRecords(table_name):
+    if table_name == "roulettes": query = "SELECT * FROM roulettes"
+    if table_name == "open_bets": query = "SELECT * FROM open_bets"
+    if table_name == "closed_bets": query = "SELECT * FROM closed_bets"
+    cursor = connection.cursor()
+    cursor.execute(query)
+    table_records = cursor.fetchall()
+
+    return table_records
+
+def WinningResultSelection():
+    valid_bet_selection=list(range(39))
+    for valid_numbers in range(37):
+        valid_bet_selection[valid_numbers]=str(valid_bet_selection[valid_numbers])
+    valid_bet_selection[37]='black'
+    valid_bet_selection[38]='red'
+    valid_bet_selection = tuple(valid_bet_selection)
+    winning_tuple_position = random.randint(0,38)
+    winning_value = valid_bet_selection[winning_tuple_position]
+
+    return winning_value
+
+def CreateResultTable(id):
+    bet_result = WinningResultSelection()
+    query = "SELECT * FROM open_bets WHERE IdRoulette = %s"
+    cursor = connection.cursor()
+    cursor.execute(query,[id])
+    elements_created = cursor.fetchall() 
+    if elements_created != []:
+        for row_id_elements in elements_created:
+            table_user_id = row_id_elements[1]
+            table_bet_selection = row_id_elements[3]
+            table_bet_amount = row_id_elements[4]
+            table_datetime = row_id_elements[5]
+            if table_bet_selection == bet_result:
+                if table_bet_selection == "black" or table_bet_selection == "red":
+                    amount_won = 2 * table_bet_amount
+                else:
+                    amount_won = 5 * table_bet_amount
+            else:   amount_won =  0
+            cursor = connection.cursor()
+            query = "INSERT INTO closed_bets (IdUsuario, IdRoulette, BetSelection, BetAmount, Datetime, BetResult, AmountWon) VALUES (%s,%s,%s,%s,%s,%s,%s)"
+            bet_values = [table_user_id, id, table_bet_selection, table_bet_amount, table_datetime, bet_result, amount_won]
+            cursor.execute(query, bet_values)
+            connection.commit()
+            
 @app.route("/")
 def index():
     return "Check the terminal"
@@ -120,18 +198,37 @@ def AddBet():
         else:
             return jsonify({'response':400,'Added Bet':"Failed",'error':"Invalid Key or Header"})
 
-@app.route("/RouletteClosing")
+@app.route("/RouletteClosing", methods=["POST"])
 def RouletteClosing():
-    return "Roulette Closed"
+    cursor = connection.cursor()
+    if request.method == "POST":
+        request_json_data = request.json
+        if 'RouletteId' in request_json_data:
+            roulette_id_received = request_json_data['RouletteId']
+            roulette_found=FindRoulette(roulette_id_received)
+            roulette_status_open = VerifyRouletteStatus(roulette_id_received)
+            if roulette_found and roulette_status_open:
+                CreateResultTable(roulette_id_received)
+                closed_bets_record = ListTableRecords("closed_bets")
+                return jsonify(closed_bets_record)
+            else:
+                return jsonify({'response':400,'Update':"Roulette Closing",'error':"Invalid Id"})            
+        else:
+            return jsonify({'response':400,'Update':"Roulette Closing",'error':"Invalid Key"})
+    else:
+        return jsonify({'response':405,'Update':"Roulette Closing",'error':"Invalid Method"})
 
 @app.route("/RoulettesList", methods = ["GET"])
 def RoulettesList():
-    cursor = connection.cursor()
-    query = "SELECT * FROM roulettes"
-    cursor.execute(query)
-    roulettes_created = cursor.fetchall()
-    dictionary_roulette ={} 
-    if cursor.rowcount != 0:
-        for row_id_roulettes in roulettes_created:
-            dictionary_roulette[row_id_roulettes[0]]= row_id_roulettes[1]
-    return jsonify(dictionary_roulette)
+    created_table_list=ListTableRecords("roulettes")
+    return jsonify(created_table_list)
+
+@app.route("/List", methods = ["GET"])
+def List():
+    created_table_list=ListTableRecords("open_bets")
+    return jsonify(created_table_list)
+
+
+
+
+
