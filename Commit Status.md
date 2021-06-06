@@ -1,5 +1,5 @@
 # Commit Purpose
-This commits creates the `SaveClosedBetsRecord` function. This function save the closed bets in the `bets_record` table that store the  all betting history
+This commits creates the `CloseRoulette` function. This function closes an specific roulette and is called on the `/RouletteClosing` after the entire process and validation
 
 
 # Operation
@@ -171,7 +171,7 @@ This route must be completed this are the functionalities missing:
 
 
 # Changes made compared to the previous one
-`SaveClosedBetsRecord` added to the `RouletteClosing` route
+In the `/RouletteClosing` route the `CloseRoulette` is implemented to close a specific roulette. The `Idroulette` to be closed is received as a parameter
 
 
 # Files and Folders
@@ -179,8 +179,6 @@ This route must be completed this are the functionalities missing:
 
 ### - routes.py
 
-- In the `/RouletteClosing` route the `SaveClosedBetsRecord` function is implemented to:
-  - Save the `closed_bets` in a `bets_record` table that will store all betting history
-  - Delete all the `open_bets` related to the `IdRoulette` specified as the received parameter
-  - Delete all the `closed_bets` related to the `IdRoulette` specified as the received parameter
+- In the `/RouletteClosing` route the `CloseRoulette` is implemented to close a specific roulette. The `Idroulette` to be closed is received as a parameter
+
 

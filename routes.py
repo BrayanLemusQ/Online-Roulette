@@ -136,7 +136,23 @@ def CreateResultTable(id):
             bet_values = [table_user_id, id, table_bet_selection, table_bet_amount, table_datetime, bet_result, amount_won]
             cursor.execute(query, bet_values)
             connection.commit()
-            
+
+def SaveClosedBetsRecord(Id):
+    cursor = connection.cursor()
+    transfer_closed_bets_into_record_query = "INSERT INTO bets_record SELECT * FROM closed_bets"   
+    cursor.execute(transfer_closed_bets_into_record_query)
+    delete_closed_bets_query = "DELETE FROM closed_bets"    
+    cursor.execute(delete_closed_bets_query)
+    delete_open_bets_query = "DELETE FROM open_bets WHERE IdRoulette = %s"
+    cursor.execute(delete_open_bets_query,[Id])
+    connection.commit()
+
+def CloseRoulette(Id):
+    cursor = connection.cursor()
+    close_roulette_query = "UPDATE roulettes SET State = 'closed' WHERE Id = %s"
+    cursor.execute(close_roulette_query,[Id])
+    connection.commit()  
+
 @app.route("/")
 def index():
     return "Check the terminal"
@@ -210,6 +226,7 @@ def RouletteClosing():
             if roulette_found and roulette_status_open:
                 CreateResultTable(roulette_id_received)
                 closed_bets_record = ListTableRecords("closed_bets")
+                CloseRoulette(roulette_id_received)
                 SaveClosedBetsRecord(roulette_id_received)
                 return jsonify(closed_bets_record)
             else:
@@ -228,15 +245,8 @@ def RoulettesList():
 def List():
     return "hola"
 
-def SaveClosedBetsRecord(Id):
-    cursor = connection.cursor()
-    transfer_closed_bets_into_record_query = "INSERT INTO bets_record SELECT * FROM closed_bets"   
-    cursor.execute(transfer_closed_bets_into_record_query)
-    delete_closed_bets_query = "DELETE FROM closed_bets"    
-    cursor.execute(delete_closed_bets_query)
-    delete_open_bets_query = "DELETE FROM open_bets WHERE IdRoulette = %s"
-    cursor.execute(delete_open_bets_query,[Id])
-    connection.commit()
+
+
     
 
 
