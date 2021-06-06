@@ -1,5 +1,5 @@
 from app import app
-from mysql.connector import connection
+from mysql.connector import connection, cursor
 import mysql.connector
 from flask import request, jsonify
 import datetime
@@ -210,6 +210,7 @@ def RouletteClosing():
             if roulette_found and roulette_status_open:
                 CreateResultTable(roulette_id_received)
                 closed_bets_record = ListTableRecords("closed_bets")
+                SaveClosedBetsRecord(roulette_id_received)
                 return jsonify(closed_bets_record)
             else:
                 return jsonify({'response':400,'Update':"Roulette Closing",'error':"Invalid Id"})            
@@ -223,10 +224,22 @@ def RoulettesList():
     created_table_list=ListTableRecords("roulettes")
     return jsonify(created_table_list)
 
-@app.route("/List", methods = ["GET"])
+@app.route("/List", methods = ["GET","DELETE"])
 def List():
-    created_table_list=ListTableRecords("open_bets")
-    return jsonify(created_table_list)
+    return "hola"
+
+def SaveClosedBetsRecord(Id):
+    cursor = connection.cursor()
+    transfer_closed_bets_into_record_query = "INSERT INTO bets_record SELECT * FROM closed_bets"   
+    cursor.execute(transfer_closed_bets_into_record_query)
+    delete_closed_bets_query = "DELETE FROM closed_bets"    
+    cursor.execute(delete_closed_bets_query)
+    delete_open_bets_query = "DELETE FROM open_bets WHERE IdRoulette = %s"
+    cursor.execute(delete_open_bets_query,[Id])
+    connection.commit()
+    
+
+
 
 
 
