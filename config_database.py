@@ -3,7 +3,6 @@ import mysql.connector
 
 connection = mysql.connector.connect(host="localhost", user="roulettesadmin", password="admin")
 cursor = connection.cursor()
-cursor.execute("DROP DATABASE IF EXISTS mydatabase")
 cursor.execute("CREATE DATABASE IF NOT EXISTS roulette_database")
 cursor.close()
 connection = mysql.connector.connect(host="localhost", user="roulettesadmin", password="admin", database="roulette_database")
@@ -11,7 +10,6 @@ cursor = connection.cursor()
 cursor.execute("SHOW DATABASES")
 database_exists = False
 for database_name in cursor:
-    print(database_name[0])
     if database_name[0]=="roulette_database": database_exists = True
 if database_exists == True:
     print("The database EXISTS")

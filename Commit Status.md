@@ -1,12 +1,6 @@
 # Commit Purpose
-This commits purpose is to add the missing functionalities in the `RouletteClosing` route:
-- Closed the roulette selected 
-- Delete the previous data before adding the new closed_bets
-- Delete the bets of the open bets table that correspond to IdRoulette received.
-  
-In addition, the table creation in `config_database` is changed to use the `BetAmount` and the `AmountWon` values as float `instead` of `integer`.
-
-The `CreateResult` table is modified to multiplied for 1.8 the `BetAmount`. It was multiplied for 2 to avoid errors using ID, now the posible errors have been fixed
+This commit purpose is to clean code, deleting not used parts.
+Updated `Readme.md` file
 
 
 # Operation
@@ -172,35 +166,20 @@ If the table `roulettes` is empty you will receive an empty data:
 
 
 # Changes made compared to the previous one
-In the `RouletteClosing` route:
-- Closed the roulette selected 
-- Delete the previous data before adding the new `closed_bets`
-- Delete the bets of the open bets table that correspond to `IdRoulette` received.
-- Table creation in `config_database` was changed to use the `BetAmount` and the `AmountWon` values as float `instead` of `integer`.
-- The `CreateResult` function was modified to multiplied for 1.8 the `BetAmount`. It was multiplied for 2 to avoid errors using ID, now the posible errors have been fixed
-
 
 # Files and Folders
 ## Modified files and folders
 
+
+- `/List` routed deleted
+- cursor.execute("DROP DATABASE IF EXISTS mydatabase")
+- print(database_name[0])
+
 ### - routes.py
-- In the `VerifyBetAmount` function the following code was added:
+- The /List rout was deleted
 
-      bet_amount_type = type(bet_amount)
-          if bet_amount_type == int or bet_amount_type == float:
-                  integer_part_bet_amount, decimal_part_bet_amount = divmod(bet_amount, 1)
-    This conditional takes the `integer` part from the received value to verify the number in `range(0,10000)`. If a `float` is compared within this range the function will return an error
-    
-
-- In the ListTableRecord the following code was added:
+### - config_database.py
+- The following code lines were deleted:
   
-      
-      if column_name == "BetAmount" or column_name == "AmountWon":
-                record_from_the_table[column_name_data[0]]= float(row_elements[column_number])
-            else:
-                record_from_the_table[column_name_data[0]]= row_elements[column_number]
-    This conditional pass the `decimal` format value received from the table to a `float` to avoid the problem sending this kind of type with `JSON` format using the function `jsonify`
-
-### config_database.py 
-
-- The table creation was changed. The `BetAmount` and `AmountWon` in the table `open_bets`, `closed_bets` and `bets_record` was changed to use it as a `decimal` instead of `smallint`
+      cursor.execute("DROP DATABASE IF EXISTS mydatabase") 
+      print(database_name[0])

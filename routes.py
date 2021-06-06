@@ -160,7 +160,7 @@ def CloseRoulette(Id):
 
 @app.route("/")
 def index():
-    return "Check the terminal"
+    return "Use the Following routes /AddRoulette, /RouletteOpening, /AddBet, /RouletteOpening or /RoulettesList"
 
 @app.route("/AddRoulette", methods=["GET"])
 def AddRoulette():
@@ -246,9 +246,6 @@ def RoulettesList():
     created_table_list=ListTableRecords("roulettes")
     return jsonify(created_table_list)
 
-@app.route("/List", methods = ["GET"])
-def List():
-    return "hola"
 
 
 

@@ -1,9 +1,30 @@
 # Online-Roulette
-This repository implements an API that represents an online betting roulette. In this version there is a complete database configuration. This database contains two tables that stores the created roulettes and the bets that have been made. 
-By using two specific endpoint you can add a new Roulette and a new Bet.
+This repository implements an `API` that represents an ***online betting roulette***. In this version there is a complete configuration to open new roulettes, bet on it, closed these roulettes and get results. The operation, parameters, received information and more are shown below (It is recommended to read the entire operation in order to use the `API` correctly).
+
+## Operating Principle
+
+The Online-Roulette meets the following functions.
+- Creates new roulettes with an unique Id
+- Open existing roulettes. You must open a roulette before betting on it.
+- List existing roulettes and show theire status
+- Each roulette has the following betting option:
+  - Numbers between **0 - 36** (*Just integers*)
+  - Colors: **"black"** or **"red"**
+    - You can only choose ***one number or one color by bet***. (If you want to choose both you should make one bet for a number and one bet for a color)
+- Close an existing open roulette. This step choose an aleatory number or color and send the respective bets with the results.
+  - Hit the right number pays 5 times the bet
+  - Hit the color pays 1.8 times the bet 
+
 
 ## Operation
-Make sure the virtual environment is running. The word `(env)` should be at the beginning of the command line on the terminal as it shows the following line: 
+
+The database where the data would be stored is created automatically. Add the following user with all the priviliges in mysql server
+
+    HOST : 'localhost'
+    USER : 'roulettesadmin'
+    PASSOWORD : 'admin' 
+
+Make sure the virtual environment is running on your terminal. The word `(env)` should be at the beginning of the command line on the terminal as it shows the following line: 
 
     (env) PS C:\Desktop\Online-Roulette> 
 
@@ -11,7 +32,6 @@ If the virtual environment is not running type the following line on the termina
 
     .\env\Scripts\Activate.ps1
 
-#### **No database existence verification need**
 
 ### **¬ Run the flask app by typing the following line:***
 
@@ -104,22 +124,72 @@ The response to a bet successfully added should look like this:
         "response": 200
     }
 
+### **¬ Use the */RouletteClosing* to** search the bets made in a specific roulette, and send the results as a response:
+
+Make sure to make a `POST request` with the following data:
+
+    {
+        "RouletteId": valid_roulette_id_number
+    }
+- The `valid_roulette_id_number` must be an integer
+
+If the `IdRoulette` sended in the `request` corresponds to a table without any bets the response will be an empty data:
+
+    {}
+
+If the `IdRoulette` sended in the `request` corresponds to an none-existing roulette the response will be the following:
+
+    {
+        "Roulette Closing": "Failed",
+        "error": "Invalid Id",
+        "response": 400
+    }
+
+Pay attention to the *key values* in the *JSON format*, if the request does not brings this data, the endpoint will respond:
+
+    {
+        "Roulette Closing": "Failed",
+        "error": "Invalid Key or Header",
+        "response": 400
+    }
+
+The response to a succesfully roulette closing will be like this:
+
+    [
+    {
+        "AmountWon": amoun_won,
+        "BetAmount": bet_amount,
+        "BetResult": bet_result,
+        "BetSelection": bet_selection,
+        "Datetime": datetime,
+        "Id": bet_closed_id,
+        "IdRoulette": id_roulette,
+        "IdUsuario": id_usuario
+    }
+    ]
+
+
 
 ### **¬ Use the */RoulettesList* to** list all the created roulettes with theyre corresponding status. 
 
 The route will send a respond with a Json data using the following structure as a result for the request. You must use a `GET request` to acquire the data.
 
+    [
     {
-        "roulette_id_1": current_roulette_status,
-        "roulette_id_2": current_roulette_status,
-        "roulette_id_3": current_roulette_status,
-
-        .
-        .
-        .
-
-        "roulette_id_n": current_roulette_status,
-    }
+        "Id": roulette_id_1,
+        "State": current_roulette_status
+    },
+    {
+        "Id": roulette_id_2,
+        "State": current_roulette_status
+    },
+    .
+    .
+    .
+    {
+        "Id": roulette_id_n,
+        "State": current_roulette_status
+    },
 
 If the table `roulettes`is empty you will receive a empty data:
 
