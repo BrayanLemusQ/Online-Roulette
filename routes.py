@@ -20,10 +20,11 @@ def FindRoulette(id):
 
 def VerifyBetAmount(bet_amount):
     valid_bet_amount=False
-    if type(bet_amount) == int:
-        if bet_amount in range(0,10000): 
+    bet_amount_type = type(bet_amount)
+    if bet_amount_type == int or bet_amount_type == float:
+        integer_part_bet_amount, decimal_part_bet_amount = divmod(bet_amount, 1)
+        if integer_part_bet_amount in range(0,10000): 
             valid_bet_amount=True
-    
     return valid_bet_amount
 
 def VerifyBetSelection(bet_selection):
@@ -74,7 +75,7 @@ def TableColumnNames(table_name):
     return table_column_names
 
 def ListTableRecords(table_name):
-    column_names = TableColumnNames(table_name)
+    column_names_data = TableColumnNames(table_name)
     existing_table_records = TableRecords(table_name)
     noumber_of_records = len(existing_table_records) 
     records_list = [None]*noumber_of_records
@@ -82,8 +83,12 @@ def ListTableRecords(table_name):
     record_number=0
     for row_elements in existing_table_records:
         column_number=0
-        for column_name in column_names:
-            record_from_the_table[column_name[0]]= row_elements[column_number]
+        for column_name_data in column_names_data:
+            column_name = column_name_data[0]
+            if column_name == "BetAmount" or column_name == "AmountWon":
+                record_from_the_table[column_name_data[0]]= float(row_elements[column_number])
+            else:
+                record_from_the_table[column_name_data[0]]= row_elements[column_number]
             column_number+=1
         records_list[record_number] = record_from_the_table
         record_from_the_table={}
@@ -123,11 +128,11 @@ def CreateResultTable(id):
         for row_id_elements in elements_created:
             table_user_id = row_id_elements[1]
             table_bet_selection = row_id_elements[3]
-            table_bet_amount = row_id_elements[4]
+            table_bet_amount = float(row_id_elements[4])
             table_datetime = row_id_elements[5]
             if table_bet_selection == bet_result:
                 if table_bet_selection == "black" or table_bet_selection == "red":
-                    amount_won = 2 * table_bet_amount
+                    amount_won = 1.8 * table_bet_amount
                 else:
                     amount_won = 5 * table_bet_amount
             else:   amount_won =  0
@@ -241,7 +246,7 @@ def RoulettesList():
     created_table_list=ListTableRecords("roulettes")
     return jsonify(created_table_list)
 
-@app.route("/List", methods = ["GET","DELETE"])
+@app.route("/List", methods = ["GET"])
 def List():
     return "hola"
 
