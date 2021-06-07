@@ -18,7 +18,7 @@ The Online-Roulette meets the following functions.
 Bet operation result:
   - You can pick **either a number or a color**. 
   - The program select a **number as a winner**.
-  - The program will determine if the winning **number is odd or even**. 
+  - The program will determine if the winning    **number is odd or even**. 
   - If you pick the **"black" color**, you would win if the result is an **odd number**
   - If you pick the **"red" color**, you would win if the result is an **even number**
 
@@ -201,3 +201,31 @@ If the table `roulettes`is empty you will receive a empty data:
 
     {}
 
+## Function Operation and explanation
+
+- `TableColumnNames` This function returns the column names of the table received as a parameter.
+  - This `function` return a `list` type value.
+  - Every list position contents a `tuple`. This `tuple` represents the information of the column (*`int, null, PRIMARY KEY, varchar(n), etc...`*). 
+  - The first position of every `tuple` represents each column name.
+  - The table name is received in the function as a `string`
+
+- `ListTableRecords` This function returns the records list from a specifc table. The table name must be passed as a paremeter to the function.
+  - This `function` return a `list` type value.
+  - Every list position contents a `dictionary`. This `dictionary` represents the store record information
+  - Creates a dictionary for every record information and uses the returned value in `TableColumnNames` as `key parameter` to the dictionary and the read values from the table as the value stored 
+  - A single record is stored as a `dictionary`, and the complete record is stored as a `list` of this dictionaries.
+  - The table name is received in the function as a `string`
+
+- `TableRecords` Everytime the complete record information of a table is required this function can be called, sending the name of the table to be consulted as a parameter. Inside the function, the query required is created based on the sended parameter, in this way the function would always return the right information.
+  - This `function` return a `list` type value.
+  - Every list position corresponds to a recorded data in the table consultes.
+  - Every list position contents a `tuple`. This `tuple` represents the information stores at the time of registration
+  - The table name is received in the function as a `string`
+
+- `WinningResultSelection` This function creates a `tuple` that stores the possible values to bet; the numbers between **0 - 36** and the colors **black** and **red**. It also generates a random `int` value between  **0 - 38**, this number determines the `winning_value` stored in the `winner_tuple_position`.
+- The winning value is returned as a string.
+
+- `CreateResultTable` This function creates an entire table record (the table structured is defined in the `config_database.py` file), the record value corresponds to the information of every bet made in a specific roulette, adiotining two fields `BetResult` (indicates the winning value for this specific roulette) and `AmountWon`(indicates the amount won in that bet, if the `BetResult` is not the same that the `BetSelection` this value will be *0*)
+  -   This function does not return any value since the information is stored in the database on a specific table called `closed_bets`
+  -   This `function` select the information in the `open_bets` table that corresponds to an specific `roulette id` (the parameter recieved in this function), this information is copied to `closed_bet` table aditioning the values mentioned above.
+  -   This `function` also validates if the `BetSelection` is equal to the `BetResult`, in that case the `AmountWon` will be `BetAmount` multiplied 5 times if `BetSelection` was a number and 2 times if it was a color. 
