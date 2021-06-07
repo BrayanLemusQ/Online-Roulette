@@ -201,7 +201,20 @@ If the table `roulettes`is empty you will receive a empty data:
 
     {}
 
-## Function Operation and explanation
+## Functions -  Operation and explanation
+
+-`FindRoulette` This function search the `IdRoulette` in the `roulettes` table, if the `IdRoulette` exists the function returns a `true` value.
+
+- `VerifyBetamount` This function verifies the `bet_amount` value received as a parameter, if the value is correct the function returns a `true` value:
+  - The `BetAmount` should be `int` or `float`
+  - The `BetAmount` should be between **0 - 10000** 
+  
+- `VerifyBetSelection` This function verifies the `bet_selection` value received as a parameter, if the value is correct the function returns a `true` value. This function creates a tuple with 39 parameters (numbers between **0 - 36** and color **"black"** or **"red"**). If the received value is in the tuple, that means that the `bet_selection` is correct.
+  - The `bet_selection` should be a number between **0 - 36** or a color **"black"** or **"red"**.
+
+- `VerifyRouletteStatus` This function verifies the roulette status of the `IdRoulette` value received as a parameter, if the roulette is open the function will return a `true` value, otherwise will return `False`
+
+- `AcquireDateNowISOFormat` This function acquire the current datetime and returns it in ISO format as a `string`. 
 
 - `TableColumnNames` This function returns the column names of the table received as a parameter.
   - This `function` return a `list` type value.
@@ -229,3 +242,9 @@ If the table `roulettes`is empty you will receive a empty data:
   -   This function does not return any value since the information is stored in the database on a specific table called `closed_bets`
   -   This `function` select the information in the `open_bets` table that corresponds to an specific `roulette id` (the parameter recieved in this function), this information is copied to `closed_bet` table aditioning the values mentioned above.
   -   This `function` also validates if the `BetSelection` is equal to the `BetResult`, in that case the `AmountWon` will be `BetAmount` multiplied 5 times if `BetSelection` was a number and 2 times if it was a color. 
+
+- `SaveClosedBetsRecord` This function transfers the closed_bets table to the bets_record, and clears the closed_bets table.
+  - Receives an `IdRoulette` value as a paremeter (`int`) 
+
+- `CloseRoulette` This function changes the status of the `IdRoulette` received as parameter. 
+  - The parameter received shoud be an `int`.

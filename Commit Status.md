@@ -171,4 +171,6 @@ If the table `roulettes` is empty you will receive an empty data:
 
 ### - readme.md
 
-The `TableColumnNames`, `ListTableRecords`, `TableRecords`, `WinningResultSelection` and `CreateResultTable` function are explained.
+The `FindRoulette`, `VerifyBetamount`, `VerifyBetSelection`, `VerifyRouletteStatus`, `AcquireDateNowISOFormat`, `TableRecords`, `WinningResultSelection`,  `SaveClosedBetsRecord` and `CloseRoulette` function are explained.
+
+The AdquireDateNowISOFormat change name for AcquireDateNowISOFormat.

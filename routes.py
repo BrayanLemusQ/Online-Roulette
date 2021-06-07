@@ -53,7 +53,7 @@ def VerifyRouletteStatus(id):
             roulette_status_open = True
     return roulette_status_open
 
-def AdquireDateNowISOFormat():
+def AcquireDateNowISOFormat():
     now = datetime.datetime.now()
     year = now.year
     month = now.month
@@ -206,7 +206,7 @@ def AddBet():
             bet_selection_correct = VerifyBetSelection(bet_selection)
             roulette_status_open = VerifyRouletteStatus(roulette_id_received)
             if roulette_found and bet_amount_correct and bet_selection_correct and roulette_status_open:
-                date_adquired=AdquireDateNowISOFormat()
+                date_adquired=AcquireDateNowISOFormat()
                 query = "INSERT INTO open_bets (IdUsuario, IdRoulette, BetSelection, BetAmount, Datetime) VALUES (%s,%s,%s,%s,%s)"
                 bet_values = [id_usuario, roulette_id_received, bet_selection, bet_amount, date_adquired]
                 cursor.execute(query, bet_values)
