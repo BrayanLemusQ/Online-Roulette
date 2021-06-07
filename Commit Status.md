@@ -1,6 +1,15 @@
 # Commit Purpose
-This commit purpose is to clean code, deleting not used parts.
-Updated `Readme.md` file
+This commit purpose is to change the bet operation result:
+
+- **Bet operation result Before:**
+  - You should pick **either a number or a color**, then the program select a winning result **either a number or a color**.
+  - If you **pick a color**, you would **only win** if the result is **the color that you have chosen**. If the result is a number, you would lose no matter the result number.
+- **Bet operation result Now - fixed logic:**
+  - You can pick **either a number or a color**, then the program select a **number as a winner**.
+  - The program will determine if the winning result **number is odd or even**. 
+  - If you pick the **"black" color**, you would win if the result is an **odd number**
+  - If you pick the **"red" color**, you would win if the result is an **even number**
+  
 
 
 # Operation
@@ -170,16 +179,18 @@ If the table `roulettes` is empty you will receive an empty data:
 # Files and Folders
 ## Modified files and folders
 
-
-- `/List` routed deleted
-- cursor.execute("DROP DATABASE IF EXISTS mydatabase")
-- print(database_name[0])
-
 ### - routes.py
-- The /List rout was deleted
-
-### - config_database.py
-- The following code lines were deleted:
+- The `CreateResultTable` function was changed 
   
-      cursor.execute("DROP DATABASE IF EXISTS mydatabase") 
-      print(database_name[0])
+        if table_bet_selection == winning_number:
+                amount_won =  5 * table_bet_amount
+        elif table_bet_selection == winning_color:
+                amount_won = 1.8 * table_bet_amount
+        else:
+                amount_won = 0
+
+The amount_won would be multiplied 5 timers if the bet was a number and 1.8 times if the bet was a color.
+
+- The ``WinningResultTable`` function was changed
+  - The function now creates a list of number *0 - 36* and randomly picks a result. Then it calculates if the result number is even or odd.
+  - The function returns the winner number and a winner color depends if the number is odd or even

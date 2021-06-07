@@ -107,19 +107,17 @@ def TableRecords(table_name):
     return table_records
 
 def WinningResultSelection():
-    valid_bet_selection=list(range(39))
-    for valid_numbers in range(37):
-        valid_bet_selection[valid_numbers]=str(valid_bet_selection[valid_numbers])
-    valid_bet_selection[37]='black'
-    valid_bet_selection[38]='red'
-    valid_bet_selection = tuple(valid_bet_selection)
-    winning_tuple_position = random.randint(0,38)
-    winning_value = valid_bet_selection[winning_tuple_position]
+    winning_number = random.randint(0,36)
+    winning_color = ""
+    if (winning_number % 2) == 0: winning_color = "red"
+    else: winning_color = "black"
+    winning_number = str(winning_number)
+    winning_result = [winning_number, winning_color]
 
-    return winning_value
+    return winning_result
 
 def CreateResultTable(id):
-    bet_result = WinningResultSelection()
+    [winning_number, winning_color] = WinningResultSelection()
     query = "SELECT * FROM open_bets WHERE IdRoulette = %s"
     cursor = connection.cursor()
     cursor.execute(query,[id])
@@ -130,15 +128,15 @@ def CreateResultTable(id):
             table_bet_selection = row_id_elements[3]
             table_bet_amount = float(row_id_elements[4])
             table_datetime = row_id_elements[5]
-            if table_bet_selection == bet_result:
-                if table_bet_selection == "black" or table_bet_selection == "red":
-                    amount_won = 1.8 * table_bet_amount
-                else:
-                    amount_won = 5 * table_bet_amount
-            else:   amount_won =  0
+            if table_bet_selection == winning_number:
+                amount_won =  5 * table_bet_amount
+            elif table_bet_selection == winning_color:
+                amount_won = 1.8 * table_bet_amount
+            else:
+                amount_won = 0
             cursor = connection.cursor()
             query = "INSERT INTO closed_bets (IdUsuario, IdRoulette, BetSelection, BetAmount, Datetime, BetResult, AmountWon) VALUES (%s,%s,%s,%s,%s,%s,%s)"
-            bet_values = [table_user_id, id, table_bet_selection, table_bet_amount, table_datetime, bet_result, amount_won]
+            bet_values = [table_user_id, id, table_bet_selection, table_bet_amount, table_datetime, winning_number, amount_won]
             cursor.execute(query, bet_values)
             connection.commit()
 

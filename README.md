@@ -15,6 +15,12 @@ The Online-Roulette meets the following functions.
   - Hit the right number pays 5 times the bet
   - Hit the color pays 1.8 times the bet 
 
+Bet operation result:
+  - You can pick **either a number or a color**. 
+  - The program select a **number as a winner**.
+  - The program will determine if the winning **number is odd or even**. 
+  - If you pick the **"black" color**, you would win if the result is an **odd number**
+  - If you pick the **"red" color**, you would win if the result is an **even number**
 
 ## Operation
 
